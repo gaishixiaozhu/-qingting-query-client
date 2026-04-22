@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 蜻蜓查询 - 快速配置工具
-帮助用户配置API Key和数据库路径
+帮助用户配置API Key和API地址
 """
 
 import os
@@ -15,12 +15,11 @@ def main():
     print("=" * 60)
     print()
     
-    # 获取当前目录
     config_file = Path(__file__).parent / "config.py"
     
     # 读取当前配置
     current_key = ""
-    current_db = ""
+    current_url = "http://localhost:5006"
     
     if config_file.exists():
         with open(config_file, 'r') as f:
@@ -30,13 +29,13 @@ def main():
                     parts = line.split('=')
                     if len(parts) > 1:
                         current_key = parts[1].strip().strip('"\'')
-                if line.startswith('DB_PATH') and '=' in line:
+                if line.startswith('API_BASE_URL') and '=' in line:
                     parts = line.split('=')
                     if len(parts) > 1:
-                        current_db = parts[1].strip().strip('"\'')
+                        current_url = parts[1].strip().strip('"\'').strip()
     
     print(f"当前API Key: {current_key[:10] + '...' if current_key else '未配置'}")
-    print(f"当前数据库路径: {current_db or '未配置'}")
+    print(f"当前API地址: {current_url}")
     print()
     
     # 配置API Key
@@ -50,7 +49,7 @@ def main():
         
         with open(config_file, 'w') as f:
             for line in lines:
-                if line.startswith('API_KEY') and '=' in line:
+                if line.startswith('API_KEY') and '=' in line and not line.strip().startswith('#'):
                     f.write(f'API_KEY = "{new_key}"\n')
                 else:
                     f.write(line)
@@ -61,55 +60,34 @@ def main():
     
     print()
     
-    # 检查数据库
+    # 配置API地址
     print("-" * 60)
-    print("检查数据库位置...")
+    print("API地址配置（服务端运行地址）:")
+    print("  本地调试: http://localhost:5006")
+    print("  外网访问: https://12335pm0oq770.vicp.fun")
+    new_url = input(f"请输入API地址（直接回车使用默认: {current_url}）: ").strip()
     
-    possible_dbs = [
-        Path.home() / ".openclaw/skills/data/cache.db",
-        Path.home() / ".openclaw/skills/data/qingting_cache.db",
-        Path("/data/cache.db"),
-        Path("/app/data/cache.db"),
-    ]
-    
-    found_db = None
-    for p in possible_dbs:
-        if p.exists():
-            found_db = p
-            print(f"✅ 找到数据库: {p}")
-            break
-    
-    if not found_db:
-        print("❌ 未找到数据库文件!")
-        print()
-        print("请选择:")
-        print("1. 手动输入数据库路径")
-        print("2. 跳过，稍后配置")
+    if new_url:
+        with open(config_file, 'r') as f:
+            lines = f.readlines()
         
-        choice = input("请选择 (1/2): ").strip()
-        
-        if choice == "1":
-            db_path = input("请输入数据库路径: ").strip()
-            if db_path:
-                with open(config_file, 'r') as f:
-                    lines = f.readlines()
-                
-                with open(config_file, 'w') as f:
-                    for line in lines:
-                        if line.startswith('DB_PATH') and '=' in line:
-                            f.write(f'DB_PATH = "{db_path}"\n')
-                        else:
-                            f.write(line)
-                print("✅ 数据库路径配置成功!")
+        with open(config_file, 'w') as f:
+            for line in lines:
+                if line.startswith('API_BASE_URL') and '=' in line and not line.strip().startswith('#'):
+                    f.write(f'API_BASE_URL = "{new_url}"\n')
+                else:
+                    f.write(line)
+        print("✅ API地址配置成功!")
     
     print()
     print("=" * 60)
     print("配置完成!")
     print("=" * 60)
     print()
-    print("下一步:")
-    print("1. 启动API服务: python3 api_server.py")
-    print("2. 或使用: ./start.sh")
+    print("使用方式:")
+    print("  from qingting_client import QingtingClient")
+    print("  client = QingtingClient()")
+    print("  result = client.query_schools('ln', nature='物理类')")
     print()
 
 if __name__ == "__main__":
