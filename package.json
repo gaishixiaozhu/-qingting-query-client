@@ -1,0 +1,62 @@
+{
+  "name": "qingting-query",
+  "version": "1.0.0",
+  "description": "蜻蜓智能志愿查询 - 基于等位分法的精准志愿填报推荐系统",
+  "author": "蜻蜓生涯",
+  "maintainers": [
+    {
+      "name": "蜻蜓生涯",
+      "email": "contact@qingting.com"
+    }
+  ],
+  "tags": [
+    "志愿填报",
+    "高考",
+    "高校专项计划",
+    "等位分法",
+    "院校查询"
+  ],
+  "keywords": [
+    "志愿填报",
+    "高考志愿",
+    "院校查询",
+    "专业推荐",
+    "录取分析"
+  ],
+  "license": "MIT",
+  "pricing": {
+    "type": "api_key",
+    "contact": "请联系开发者购买API Key"
+  },
+  "dependencies": {
+    "python": ">=3.8",
+    "flask": ">=2.0",
+    "requests": ">=2.25"
+  },
+  "config": {
+    "api_key_required": true,
+    "rate_limit": 100,
+    "rate_limit_period": 60,
+    "db_path": "/Users/fuquanhao/.openclaw/skills/data/cache.db"
+  },
+  "endpoints": {
+    "query": "/api/v1/query",
+    "health": "/api/v1/health",
+    "conditions_check": "/api/v1/conditions_check"
+  },
+  "capabilities": {
+    "intent_detection": true,
+    "score_to_rank": true,
+    "rank_to_score": true,
+    "school_query": true,
+    "major_query": true,
+    "admission_recommendation": true,
+    "equivalent_score_calculation": true
+  },
+  "limits": {
+    "max_results": 300,
+    "max_plan_results": 50,
+    "rate_limit": "100次/分钟",
+    "timeout": 30
+  }
+}
