@@ -8,6 +8,9 @@ import pathlib
 # 方式1: 直接在这里填写
 API_KEY = ""
 
+# Salt配置（与服务器保持一致，自动从环境变量或配置文件读取）
+SALT = os.environ.get("QINGTING_API_SALT", "cb86d1a32cb94865ae3deda0650d0400ef2d59a675490f73efcadbc8c51bbfd5")
+
 # 方式2: 通过环境变量 QINGTING_API_KEY 配置
 if not API_KEY:
     API_KEY = os.environ.get("QINGTING_API_KEY", "")
